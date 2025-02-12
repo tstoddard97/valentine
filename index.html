@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For Cici ♡</title>
+  
+  <!-- Google Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #FFC0CB;
+      font-family: "Press Start 2P", sans-serif;
+      color: #FF0000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .console-container {
+      width: 80%;
+      max-width: 600px;
+    }
+    .pulsing {
+      font-size: 18px;
+      animation: pulse 1s infinite;
+      cursor: pointer;
+    }
+    @keyframes pulse {
+      0%   { opacity: 1; }
+      50%  { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    #prompt-container {
+      display: none;
+      margin-top: 20px;
+    }
+    #prompt-text {
+      min-height: 120px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .button {
+      background: transparent;
+      border: 3px solid #FF0000;
+      color: #FF0000;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: "Press Start 2P", sans-serif;
+      display: none;
+    }
+    .gif-container {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+      margin-bottom: 20px;
+    }
+    .gif-container.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .heart-container {
+      display: none;
+      margin-top: 20px;
+    }
+    .heart-container img {
+      width: 80px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <audio id="background-music" loop autoplay>
+    <source src="https://kappa.vgmsite.com/soundtracks/stardew-valley/srjzgabwfi/81.%20Movie%20Theater.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="console-container">
+    <div id="start-screen">
+      <div class="pulsing">Tap to begin!</div>
+    </div>
+    <div id="prompt-container">
+      <div id="prompt-text"></div>
+      <div id="gif-container" class="gif-container">
+        <img id="gif" src="" alt="GIF">
+      </div>
+      <button id="continue-btn" class="button">Continue</button>
+      <div id="heart-container" class="heart-container">
+        <img src="https://opengameart.org/sites/default/files/heart%20pixel%20art%20254x254.png" alt="Pixel Heart">
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const prompts = [
+      { text: "Cici - I wanted to make you something really special as a Valentine's Day card this year, and I couldn't think of anything we love bonding over more than video games and looking at cats and going 'That's us!'. So... I set to work programming this.", gif: "https://media4.giphy.com/media/lJNoBCvQYp7nq/giphy.gif" },
+      { text: "I know that things have been stressful lately, but you are the one person I know I can always rely on, and I hope you feel the same.", gif: "https://media1.giphy.com/media/iUR4qsCkrNHhe/giphy.gif" },
+      { text: "I know that even when times get tough, you and I will always be able to communicate our needs to each other and continue to have a healthy relationship.", gif: "https://media2.giphy.com/media/DqSReZdWmjS7K/giphy.gif" },
+      { text: "... and even if we might disagree on some stuff, I know we will be able to emerge from it even stronger.", gif: "https://media3.giphy.com/media/G6fmc0H5xpZDO/giphy.gif" },
+      { text: "I'm so excited that we're going to have a place of our own soon, that we can both call home. Soon, seeing you will be just a quick trip down the hall. :)", gif: "https://media1.giphy.com/media/kgHj1Jtzga4UO7DmLC/giphy.gif" },
+      { text: "You are my absolute favorite person in the world, and I will be forever grateful that we are in each others' lives.", gif: "https://media3.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" },
+      { text: "I love you, Cici. Happy Valentine's Day.", gif: "https://media1.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" }
+    ];
+    
+    let currentPrompt = 0;
+    
+    const startScreen = document.getElementById('start-screen');
+    const promptContainer = document.getElementById('prompt-container');
+    const promptTextEl = document.getElementById('prompt-text');
+    const gifContainer = document.getElementById('gif-container');
+    const gifEl = document.getElementById('gif');
+    const continueBtn = document.getElementById('continue-btn');
+    const heartContainer = document.getElementById('heart-container');
+    
+    startScreen.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      promptContainer.style.display = 'block';
+      let bgMusic = document.getElementById('background-music');
+      bgMusic.volume = 0.3; // Adjust volume (e.g., 50%)
+      bgMusic.play();
+      displayPrompt(prompts[currentPrompt]);
+    });
+    
+    continueBtn.addEventListener('click', () => {
+      currentPrompt++;
+      if (currentPrompt < prompts.length) {
+        displayPrompt(prompts[currentPrompt]);
+      } else {
+        promptTextEl.textContent = "Yours always, Tyler.";
+        gifContainer.style.display = 'none';
+        continueBtn.style.display = 'none';
+        heartContainer.style.display = 'block';
+      }
+    });
+
+    function displayPrompt(prompt) {
+      promptTextEl.innerHTML = '&nbsp;';
+      gifContainer.classList.remove('show');
+      gifContainer.style.display = 'none';
+      continueBtn.style.display = 'none';
+      
+      let i = 0;
+      const speed = 50;
+      const interval = setInterval(() => {
+        promptTextEl.textContent += prompt.text.charAt(i);
+        i++;
+        if (i === prompt.text.length) {
+          clearInterval(interval);
+          gifEl.src = prompt.gif;
+          gifContainer.style.display = 'block';
+          setTimeout(() => gifContainer.classList.add('show'), 100);
+          setTimeout(() => continueBtn.style.display = 'inline-block', 800);
+        }
+      }, speed);
+    }
+  </script>
+</body>
+</html>
